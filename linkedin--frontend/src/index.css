@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+@layer base {
+  :root, html.light, [data-theme="light"] {
+    --bg-main: #f4f2ee;
+    --bg-card: #ffffff;
+    --bg-card-secondary: #f8fafc;
+    --bg-input: #edf3f8;
+    --border-color: #e8e8e8;
+    --border-hover: #cfd9df;
+    --text-primary: #191919;
+    --text-secondary: #666666;
+    --text-muted: #8c8c8c;
+    --accent-blue: #0a66c2;
+    --accent-blue-hover: #004182;
+    --accent-blue-light: #0a66c2;
+    --badge-red: #cc1016;
+    --status-online: #057642;
+    --status-warning: #915907;
+  }
+
+  html.dark, [data-theme="dark"] {
+    --bg-main: #1d2226;
+    --bg-card: #242a30;
+    --bg-card-secondary: #1b2024;
+    --bg-input: #1b2024;
+    --border-color: #38434f;
+    --border-hover: #4e5d6d;
+    --text-primary: #ffffff;
+    --text-secondary: #a8b3cf;
+    --text-muted: #8b949e;
+    --accent-blue: #0a66c2;
+    --accent-blue-hover: #004182;
+    --accent-blue-light: #38bdf8;
+    --badge-red: #cc1016;
+    --status-online: #057642;
+    --status-warning: #915907;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.45);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* ================= LINKEDIN BUTTON SYSTEM ================= */
+.btn-primary {
+  background-color: #0a66c2 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #004182 !important;
+  color: #ffffff !important;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary, .btn-outline {
+  background-color: transparent !important;
+  color: #0a66c2 !important;
+  font-weight: 600;
+  border: 1.5px solid #0a66c2 !important;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-secondary:hover:not(:disabled), .btn-outline:hover:not(:disabled) {
+  background-color: #0a66c2 !important;
+  color: #ffffff !important;
+  border-color: #0a66c2 !important;
+}
+
+html.dark .btn-secondary, html.dark .btn-outline, [data-theme="dark"] .btn-secondary, [data-theme="dark"] .btn-outline {
+  color: #70b5f9 !important;
+  border-color: #70b5f9 !important;
+}
+html.dark .btn-secondary:hover:not(:disabled), html.dark .btn-outline:hover:not(:disabled), [data-theme="dark"] .btn-secondary:hover:not(:disabled), [data-theme="dark"] .btn-outline:hover:not(:disabled) {
+  background-color: #0a66c2 !important;
+  color: #ffffff !important;
+  border-color: #0a66c2 !important;
+}
+
+.btn-danger {
+  background-color: #cc1016 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: #b20d12 !important;
+  color: #ffffff !important;
+}
+
+/* Ensure all clickable controls have pointer cursor */
+button, [role="button"], a {
+  cursor: pointer;
+}

@@ -1,0 +1,64 @@
+# ==========================================
+# LinkPro - Git Ignore Rules
+# ==========================================
+
+# Environment variables & secrets (CRITICAL FOR SECURITY)
+*.env
+*.env.*
+config.env
+!*.env.example
+!config.env.example
+*.pem
+*.key
+*.cert
+LATEST_PASSWORD_RESET_CODE.txt
+
+# Node.js dependencies
+node_modules/
+package-lock.json.bak
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production builds
+dist/
+build/
+out/
+.vite/
+.next/
+
+# Python cache & temporary files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Microsoft Office temporary lock files
+~$*.docx
+~$*.pptx
+~$*.xlsx
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE & Editor folders
+.vscode/
+.vs/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Logs and diagnostics
+logs/
+*.log

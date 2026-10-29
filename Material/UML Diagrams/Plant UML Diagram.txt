@@ -1,0 +1,217 @@
+plantuml
+
+
+1) Interaction Diagram - LinkedIn - User Registration & Login Flow
+
+
+@startuml LinkedIn_Auth_Interaction
+title LinkedIn - User Registration & Login Flow
+
+actor "User" as User
+participant "Browser" as Browser
+participant "LinkedIn UI" as UI
+participant "Auth Service" as Auth
+database "User DB" as DB
+
+== Registration Flow ==
+User -> Browser: Enter registration details
+Browser -> UI: POST /register (email, password, name)
+activate UI
+UI -> Auth: createUserAccount(email, password)
+activate Auth
+Auth -> DB: INSERT user_record
+DB --> Auth: user_id
+Auth --> UI: {success, user_id, token}
+deactivate Auth
+UI -> UI: Create session
+UI --> Browser: 200 OK, redirect /home
+deactivate UI
+Browser -> User: Display LinkedIn Dashboard
+
+== Login Flow ==
+User -> Browser: Enter credentials
+Browser -> UI: POST /login (email, password)
+activate UI
+UI -> Auth: validateCredentials(email, password)
+activate Auth
+Auth -> DB: SELECT * FROM users WHERE email=?
+DB --> Auth: user_record
+alt Valid credentials
+    Auth -> DB: UPDATE last_login
+    DB --> Auth: OK
+    Auth --> UI: {success, token, user_id}
+else Invalid credentials
+    Auth --> UI: {error: "Invalid credentials"}
+end
+deactivate Auth
+UI --> Browser: Success: redirect /dashboard\nOR\nError: show login form
+deactivate UI
+
+
+
+note over User, DB
+Only after successful DB validation\ncan user access LinkedIn features
+end note
+
+@enduml
+
+
+===========================================================================================================================================================
+
+
+1) Activity Diagram - LinkedIn -  For User 
+
+
+
+@startuml LinkedIn_User_Activity_Proper
+title LinkedIn  - User Activity Diagram
+
+skinparam activity {
+  BackgroundColor #E1F5FE
+  BorderColor #0277BD
+  ArrowColor #01579B
+}
+
+start
+
+:Access LinkedIn;
+
+if (Registered User?) then (yes)
+  :Enter Credentials;
+  
+  if (Valid DB Credentials?) then (yes)
+    :Login Successful;
+    :Access Dashboard;
+  else (no)
+    :Show Error Message;
+    stop
+  endif
+  
+else (no)
+  :Fill Registration Form;
+  :Check Email Availability;
+  
+  if (Email Available?) then (yes)
+    :Store User in Database;
+    :Send Verification Email;
+    
+    if (Email Verified?) then (yes)
+      :Complete Registration;
+      :Access Dashboard;
+    else (no)
+      :Registration Failed;
+      stop
+    endif
+    
+  else (no)
+    :Show Email Exists Error;
+    stop
+  endif
+endif
+
+partition "Dashboard Activities" {
+  fork
+    :Search Jobs;
+  fork again
+    :Search Members;
+  fork again
+    :View Profiles;
+  fork again
+    :Post Updates;
+  fork again
+    :Send Connection Requests;
+  end fork
+  
+  :View Notifications;
+}
+
+if (Continue Session?) then (yes)
+  -> Continue Activities;
+else (no)
+  :Logout;
+  stop
+endif
+
+@enduml
+
+===========================================================================================================================================================
+
+
+2) Activity Diagram - LinkedIn -  For Recruiter
+
+
+@startuml LinkedIn_Recruiter_Activity_Proper
+title LinkedIn Recruiter Activity Diagram
+
+skinparam activity {
+  BackgroundColor #F3E5F5
+  BorderColor #7B1FA2
+  ArrowColor #4A148C
+}
+
+start
+
+:Access LinkedIn Recruiter Portal;
+
+if (Registered Recruiter?) then (yes)
+  :Enter Credentials;
+  
+  if (Valid DB Credentials?) then (yes)
+    if (Company Verified?) then (yes)
+      :Login Successful;
+      :Access Recruiter Dashboard;
+    else (no)
+      :Company Verification Required;
+      stop
+    endif
+  else (no)
+    :Show Invalid Credentials;
+    stop
+  endif
+  
+else (no)
+  :Fill Recruiter Registration\n(Email, Password, Company);
+  :Check Email Availability;
+  
+  if (Email Available?) then (yes)
+    :Verify Company Details;
+    
+    if (Company Verified?) then (yes)
+      :Store Recruiter in Database;
+      :Complete Registration;
+      :Access Recruiter Dashboard;
+    else (no)
+      :Company Not Found;
+      stop
+    endif
+    
+  else (no)
+    :Show Email Exists Error;
+    stop
+  endif
+endif
+
+partition "Recruiter Dashboard Activities" {
+  fork
+    :Post New Job;
+  fork again
+    :Search Candidates;
+  fork again
+    :View Candidate Profiles;
+  fork again
+    :Manage Job Applications;
+  end fork
+  
+  :View Application Status;
+}
+
+if (Continue Recruiter Session?) then (yes)
+  -> Continue Activities;
+else (no)
+  :Logout;
+  stop
+endif
+
+@enduml
+
+

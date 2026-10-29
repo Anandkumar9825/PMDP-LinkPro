@@ -1,0 +1,57 @@
+				
+
+===========================================================================================================================================================
+									For Backend
+===========================================================================================================================================================
+
+
+1) Create Folder Linkedin-Backend.
+
+2) Go in that folder and open cmd and write =  " npm init -y ".  (package.json file will be created.)
+
+3) Create File in VSCode "index.js".
+
+4) Now in cmd install npm = " npm i ".
+
+5) Now install express.js in cmd = " npm i express ".
+
+6) Now create server in VSCode in index.js.
+
+7) To run Backend Serer = " node index.js "
+
+8) If give error in terminal = " Set-ExecutionPolicy RemoteSigned -Scope CurrentUser "
+   Now add nodemon in your file from vscode terminal = " npm install -g nodemon ". (It automatically saves and loades the page.) (Install Globally).
+   than run this, nodemon will be added in package.json = " npm i nodemon "
+   than run this = " nodemon index.js "
+
+9) Now add mongoose in your file from vscode terminal = " npm i mongoose ". 
+   Than run this = " npm start "
+
+10) For MongoDB Compass -> Add new Connection -> Save and Connect -> 
+
+10) On Website MongoDB Atlas create Remote DB -> New Project = name " linkedin-clone " -> create cluster -> username = " unknown98256_db_user"
+											                    password = " f6rTzcv4dEpzzDpv"
+    -> create database user -> choose connection method -> drivers -> select driver = " Node.js "
+									     version = " 4.1 or later "
+									     url = " mongodb+srv://unknown98256_db_user:ANIPGQrYS5zxhtFw@cluster0.de11zwf.mongodb.net/?appName=Cluster0 "
+   -> Done     
+
+11) Connect in connection.js file in vscode.
+
+12) Than in site of MongoDB Atlas -> Network Access -> IP Access List -> Add IP Address -> Allow Access from Anywhere -> Confirm.
+
+13) In CMD install , to convert normal password into hash password. -> " npm i cookie-parser bcryptjs "
+
+14) In CMD install -> " npm i jsonwebtoken "
+
+15) In CMD install -> " npm i dotenv "
+
+16) In CMD install, to verify Google Gmail for Login -> " npm i google-auth-library "
+
+17) In CMD install, npm i cors
+
+18) Install Socket.IO For Realtime Messaging -> npm i socket.io
+
+19) Than call in backend -> index.js
+
+20) For Mail -> npm install nodemailer crypto bcryptjs dotenv

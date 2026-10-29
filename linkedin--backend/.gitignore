@@ -1,0 +1,10 @@
+node_modules/
+config.env
+*.env
+*.env.*
+!config.env.example
+!*.env.example
+LATEST_PASSWORD_RESET_CODE.txt
+npm-debug.log*
+logs/
+*.log

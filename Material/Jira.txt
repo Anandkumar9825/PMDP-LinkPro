@@ -1,0 +1,9 @@
+
+
+Jira Antigravity 
+Atlassian
+
+API Token - ATATT3xFfGF0d1Xz1-rBkkkgqyHkWsqxDoeBbW3ZFmb5hX9wrIOc4144wiQhH4U3OUXgxF85VQgWLezOj6LAmwD6xo-E9i9nG-2UaMtaxRZNRrtCw4e69wGHjFW3F6K4Fl3DbE4s6ywIXLaM16GSGf4bWELwl_nb_dDqz-Z-pRTcunsXxF52WU0=1DFAAB5F
+Token Name - LinkPro-Setup
+Jira URL - https://id.atlassian.com/manage-profile/security/api-tokens
+Jira Project - https://unknown98256.atlassian.net/jira/software/projects/SCRUM/boards/1?filter=&groupBy=none

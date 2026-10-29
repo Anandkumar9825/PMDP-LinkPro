@@ -1,0 +1,98 @@
+/* ================= LOADER CONTAINER ================= */
+
+.loader {
+  display: flex;
+  gap: 12px;
+}
+
+/* ================= DOTS ANIMATION ================= */
+
+.loader div {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+
+  /* Gradient color for premium look */
+  background: linear-gradient(45deg, #3b82f6, #9333ea);
+
+  /* Smooth bounce animation */
+  animation: bounce 0.6s infinite alternate ease-in-out;
+}
+
+/* Delay for wave effect */
+.loader div:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.loader div:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  from {
+    transform: translateY(0px) scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(-18px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* ================= TEXT ANIMATION ================= */
+
+.loading-text {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+
+  /* Cursor line */
+  /* border-right: 3px solid #2563eb; */
+
+  /* Initial width */
+  width: 0;
+
+  /* Text style */
+  color: #2563eb;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  /* Glow effect */
+  text-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+
+  /* Animations */
+  animation: typing 2s steps(25, end) forwards, blink 0.8s infinite;
+}
+
+/* Typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 220px;
+  }
+}
+
+/* Cursor blinking */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* ================= DOTS AFTER TEXT ================= */
+
+.dots::after {
+  content: '';
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}

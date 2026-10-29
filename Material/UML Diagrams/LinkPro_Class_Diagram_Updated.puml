@@ -1,0 +1,258 @@
+@startuml LinkPro_Master_Class_Diagram
+' =======================================================
+' LINKPRO - MASTER UML CLASS DIAGRAM (PROJECT & PATTERNS)
+' =======================================================
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI", Arial, sans-serif
+skinparam roundCorner 8
+skinparam shadowing false
+skinparam classAttributeIconSize 8
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 55
+
+' Class skin styling matching original diagram aesthetics
+skinparam class {
+    BackgroundColor #F8FCF8
+    BorderColor #2E7D32
+    ArrowColor #1B5E20
+    HeaderBackgroundColor #E8F5E9
+    FontColor #1E272C
+    FontSize 11
+    FontStyle bold
+    AttributeFontColor #263238
+    AttributeFontSize 10
+}
+
+skinparam package {
+    BackgroundColor #FAFCFA
+    BorderColor #A5D6A7
+    FontColor #1B5E20
+    FontStyle bold
+    FontSize 12
+}
+
+' ================= CORE DOMAIN MODELS =================
+package "Core Domain Entities (MongoDB Schemas)" {
+
+    class Admin {
+        +role: String = "admin"
+        +permissions: String[]
+        --
+        +manageUsers(): void
+        +deleteAnyPost(postId: ObjectId): void
+        +viewAuditLogs(): void
+    }
+
+    class User {
+        +_id: ObjectId
+        +f_name: String
+        +email: String
+        +password: String
+        +role: String = "user"
+        +headline: String
+        +curr_company: String
+        +curr_location: String
+        +about: String
+        +skills: String[]
+        +profilePic: String
+        +cover_pic: String
+        +friends: ObjectId[]
+        +pending_friends: ObjectId[]
+        +sent_requests: ObjectId[]
+        +savedPosts: ObjectId[]
+        +isOnline: Boolean
+        +createdAt: Date
+        --
+        +addFriend(userId: ObjectId): void
+        +removeFriend(userId: ObjectId): void
+    }
+
+    class Post {
+        +_id: ObjectId
+        +user: ObjectId
+        +desc: String
+        +imageLink: String
+        +likes: ObjectId[]
+        +comments: Number
+        +shares: Number
+        +tags: String[]
+        +mentions: Object[]
+        +createdAt: Date
+        --
+        +addLike(userId: ObjectId): void
+        +addComment(commentId: ObjectId): void
+    }
+
+    class Comment {
+        +_id: ObjectId
+        +post: ObjectId
+        +user: ObjectId
+        +comment: String
+        +likes: ObjectId[]
+        +createdAt: Date
+        --
+        +likeComment(userId: ObjectId): void
+    }
+
+    class Notification {
+        +_id: ObjectId
+        +sender: ObjectId
+        +reciever: ObjectId
+        +content: String
+        +type: String
+        +postId: String
+        +commentId: String
+        +isRead: Boolean
+        +createdAt: Date
+        --
+        +markAsRead(): void
+    }
+
+    class Conversation {
+        +_id: ObjectId
+        +members: ObjectId[]
+        +createdAt: Date
+    }
+
+    class Message {
+        +_id: ObjectId
+        +conversation: ObjectId
+        +sender: ObjectId
+        +message: String
+        +picture: String
+        +status: String
+        +createdAt: Date
+    }
+}
+
+' ================= PROJECT DESIGN PATTERNS =================
+package "Implemented Design Patterns" {
+
+    ' Creational: Singleton
+    class DatabaseConnection <<Singleton>> {
+        -{static} instance: DatabaseConnection
+        +connectionUri: String
+        --
+        +{static} getInstance(): DatabaseConnection
+        +connect(): Promise<Connection>
+    }
+
+    ' Creational: Builder
+    class PostBuilder <<Builder>> {
+        -postData: Object
+        --
+        +setUser(userId: ObjectId): PostBuilder
+        +setContent(desc: String): PostBuilder
+        +setImage(imageLink: String): PostBuilder
+        +addTags(tags: String[]): PostBuilder
+        +build(): Post
+    }
+
+    ' Creational: Factory Method
+    class NotificationFactory <<Factory Method>> {
+        --
+        +{static} createNotification(type: String, options: Object): Notification
+    }
+
+    ' Structural: Facade
+    class PostFacade <<Facade>> {
+        -postBuilder: PostBuilder
+        -notificationFactory: NotificationFactory
+        --
+        +createPostWithEnrichment(params: Object): Promise<Post>
+        +toggleLike(postId: ObjectId, userId: ObjectId): Promise<Post>
+        +getEnrichedFeed(userId: ObjectId, strategy: FeedStrategy): Promise<Post[]>
+    }
+
+    ' Behavioral: State Pattern (Connection Lifecycle)
+    class ConnectionContext {
+        -state: ConnectionState
+        -currentUser: ObjectId
+        -targetUser: ObjectId
+        --
+        +setState(state: ConnectionState): void
+        +sendRequest(): Promise<void>
+        +acceptRequest(): Promise<void>
+        +rejectRequest(): Promise<void>
+    }
+
+    interface ConnectionState <<State>> {
+        +sendRequest(): Promise<void>
+        +acceptRequest(): Promise<void>
+        +rejectRequest(): Promise<void>
+    }
+
+    class NotConnectedState implements ConnectionState
+    class PendingRequestState implements ConnectionState
+    class ConnectedState implements ConnectionState
+
+    ' Behavioral: Strategy Pattern (Feed Ranking)
+    class FeedContext {
+        -strategy: FeedStrategy
+        --
+        +setStrategy(strategy: FeedStrategy): void
+        +getFeed(user: User): Promise<Post[]>
+    }
+
+    interface FeedStrategy <<Strategy>> {
+        +fetchFeed(user: User): Promise<Post[]>
+    }
+
+    class NetworkFeedStrategy implements FeedStrategy
+    class PublicFeedStrategy implements FeedStrategy
+    class AdminFeedStrategy implements FeedStrategy
+
+    ' Behavioral: Observer Pattern (Real-time Broadcast)
+    class NotificationSubject <<Observer>> {
+        -observers: Observer[]
+        --
+        +subscribe(observer: Observer): void
+        +notify(event: Object): void
+    }
+
+    class SocketBroadcastObserver {
+        +update(notification: Notification): void
+    }
+}
+
+' ================= RELATIONSHIPS =================
+
+' Domain inheritance & associations
+Admin --|> User : inherits & extends
+User "1" --> "*" Post : authors
+User "1" --> "*" Comment : writes
+Post "1" *-- "*" Comment : contains
+User "1" --> "*" Notification : receives
+User "2..*" -- "*" Conversation : participates in
+Conversation "1" *-- "*" Message : contains
+User "1" --> "*" Message : sends
+
+' Singleton relationship
+DatabaseConnection ..> User : pools & persists
+DatabaseConnection ..> Post : pools & persists
+
+' Facade & Builder relationships
+PostFacade --> PostBuilder : uses
+PostFacade --> NotificationFactory : triggers notifications
+PostFacade ..> Post : manages lifecycle
+PostBuilder ..> Post : instantiates
+
+' State Pattern relationships
+User ..> ConnectionContext : requests connection
+ConnectionContext o-- ConnectionState : maintains current state
+ConnectionContext ..> NotificationFactory : triggers request alerts
+
+' Strategy Pattern relationships
+Admin ..> AdminFeedStrategy : uses
+User ..> NetworkFeedStrategy : uses
+FeedContext o-- FeedStrategy : executes
+FeedContext ..> Post : queries & ranks
+
+' Observer Pattern relationships
+NotificationFactory ..> NotificationSubject : announces creation
+NotificationSubject --> SocketBroadcastObserver : broadcasts via WebSocket
+SocketBroadcastObserver ..> User : delivers realtime alert
+
+@enduml
